@@ -1,0 +1,358 @@
+Let's get started by making a simple AngularJS app. We'll explain each step in the next exercise.
+
+In app.js, type in the contents exactly as you see here:
+
+var app = angular.module("myApp", []);
+
+
+
+
+Open up index.html. Modify the <body> tag so it looks like this:
+
+<body ng-app="myApp">
+
+
+
+Open up js/controllers/MainController.js. Type in the contents exactly as you see here:
+eg:
+
+app.controller('MainController', ['$scope', function($scope) { 
+  $scope.title = 'Top Sellers in Books'; 
+}]);
+
+
+
+Go to index.html. Modify the <div class="main"> tag so it looks like this:
+
+<div class="main" ng-controller="MainController">
+
+
+
+In index.html inside <div class="main">, modify the <h1> element so it looks like this:
+
+<h1>{{ title }}</h1>
+
+
+
+this is how it works:
+
+
+
+1.  In app.js, we created a new module named myApp. A module contains the different components of an AngularJS app.
+Then, in index.html we added <body ng-app="myApp">. The ng-app is called a directive. It tells AngularJS that the myApp module will live within the <body> element, termed the application's scope. In other words, we used the ng-app directive to define the application scope.
+
+2.  In MainController.js we created a new controller named MainController. A controller manages the app's data. Here we use the property title to store a string, and attach it to $scope.
+Then, in index.html, we added <div class="main" ng-controller="MainController">. Like ng-app, ng-controller is a directive that defines the controller scope. This means that properties attached to $scope in MainController become available to use within <div class="main">.
+
+3.  Inside <div class="main"> we accessed $scope.title using {{ title }}. This is called an expression. Expressions are used to display values on the page.
+
+4.  The value of title showed up when we viewed the app in the browser.
+
+
+So far this is our typical workflow when making an AngularJS app:
+
+Create a module, and use ng-app in the view to define the application scope.
+Create a controller, and use ng-controller in the view to define the controller scope.
+Add data to $scope in the controller so they can be displayed with expressions in the view.
+
+Instructions
+1.  Let's add more data to the controller and display them in the view. In the controller, attach another property to $scope named product. Set it equal to an object with the following properties:
+
+{ 
+  name: 'The Book of Trees', 
+  price: 19 
+}
+
+2.  Then, in index.html inside <p class="title">, access the product's name with product.name and display it using an expression.
+3.  In <p class="price">, access and display the product's price.
+
+
+Currently the product price shows up as a number. It would be better to format it as a currency. Rather than change the data in the controller, let's use an AngularJS filter to format the data in the view.
+
+In index.html in <p class="price">, change the expression to look like this:
+
+{{ product.price | currency }}
+
+
+AngularJS comes with a few more built-in filters. Let's use two more.
+
+In MainController.js inside $scope.product, add a third property named pubdate:
+
+pubdate: new Date('2014', '03', '08')
+
+
+2.
+In index.html inside <p class="date">, display the product's pubdate.
+3.
+Format the product's pubdate by piping it to the date filter.
+4.
+Format the product's name by piping it to the uppercase filter.
+
+
+
+
+
+A module contains the different components of an AngularJS app
+A controller manages the app's data
+An expression displays values on the page
+A filter formats the value of an expression
+Instructions
+1.
+Let's add more data to the controller and display them in the view.
+
+In the controller, delete the $scope.product object.
+2.
+Attach a new property to $scope named products. Set it equal to an array of objects. Type in the contents exactly as you see here:
+
+[ 
+  { 
+    name: 'The Book of Trees', 
+    price: 19, 
+    pubdate: new Date('2014', '03', '08'), 
+    cover: 'img/the-book-of-trees.jpg' 
+  }, 
+  { 
+    name: 'Program or be Programmed', 
+    price: 8, 
+    pubdate: new Date('2013', '08', '01'), 
+    cover: 'img/program-or-be-programmed.jpg' 
+  } 
+]
+3.
+In the view inside <div class="main">, delete the <div class="col-md-6"> element.
+
+Replace it with this HTML. Type in the contents exactly as you see here:
+
+<div ng-repeat="product in products" class="col-md-6"> 
+  <div class="thumbnail"> 
+    <img src="img/the-book-of-trees.jpg"> 
+    <p class="title">{{ product.name }}</p> 
+    <p class="price">{{ product.price | currency }}</p> 
+    <p class="date">{{ product.pubdate | date }}</p> 
+  </div> 
+</div>
+
+Then in the view, we added <div ng-repeat="product in products">. Like ng-app and ng-controller, the ng-repeat is a directive. It loops through an array and displays each element.
+
+You'll see that both products have the same cover image. Let's fix this bug in the next exercise. Click Next to continue.
+
+<img ng-src="{{ product.cover }}">
+ng-src to get img src
+
+so these Directives bind behavior to HTML elements. When the app runs, AngularJS walks through each HTML element looking for directives. When it finds one, AngularJS triggers that behavior (like attaching a scope or looping through an array).
+
+
+So far we've made a static AngularJS app by adding properties in the controller and displaying them in the view. AngularJS is a framework for building dynamic web apps, so let's start to make this app interactive.
+1.
+In the controller in the $scope.products array, add a new property named likes to each element. Set all likes properties to 0.
+2.
+In the view under <p class="date">, type in a rating element:
+
+<div class="rating"> 
+  <p class="likes">+ </p> 
+</div>
+Inside <p class="likes">, display a product's likes using an expression.
+3.
+Back in the controller after $scope.products, attach a new property to $scope named plusOne. Set it equal to function. Type in the contents exactly as you see here:
+
+function(index) { 
+  $scope.products[index].likes += 1; 
+};
+4.
+In the view modify <p class="likes"> to look like this:
+
+<p class="likes" ng-click="plusOne($index)">
+View the AngularJS app in the browser. Click on the +0 in each product tile.
+
+
+Great! Each time you click on the number of likes, the number goes up. How does it work?
+
+The ng-click is a directive. When <p class="likes"> is clicked, ng-click tells AngularJS to run the plusOne() function in the controller.
+The plusOne() function gets the index of the product that was clicked, and then adds one to that product's likes property.
+Notice that the plusOne() doesn't interact with the view at all; it just updates the controller. Any change made to the controller shows up in the view.
+
+
+similarly make dislike button
+
+Congratulations! You built an AngularJS app from scratch. What can we generalize so far?
+
+A user visits the AngularJS app.
+The view presents the app's data through the use of expressions, filters, and directives. Directives bind new behavior HTML elements.
+A user clicks an element in the view. If the element has a directive, AngularJS runs the function.
+The function in the controller updates the state of the data.
+The view automatically changes and displays the updated data. The page doesn't need to reload at any point.
+
+
+
+
+
+aPPMARKET PHASE 2
+Here's an AngularJS app for a mobile app store:
+
+In the controller MainController.js, there are three objects $scope.move, $scope.shutterbugg, and $scope.gameboard that each contain info about an app, like its title and price.
+In the view index.html in the .main section, each app is displayed inside a .card div.
+But looking at the view, the same code is written over and over again to display each app. This is repetitive and error-prone. Let's fix this.
+Instructions
+1.
+In the new file js/directives/appInfo.js, type in this code:
+
+app.directive('appInfo', function() { 
+  return { 
+    restrict: 'E', 
+    scope: { 
+      info: '=' 
+    }, 
+    templateUrl: 'js/directives/appInfo.html' 
+  }; 
+});
+2.
+Include this new JavaScript file in index.html in line 48 as a <script> element.
+3.
+In the new file js/directives/appInfo.html. Type in this HTML to display an app's info:
+
+<img class="icon" ng-src="{{ info.icon }}"> 
+<h2 class="title">{{ info.title }}</h2> 
+<p class="developer">{{ info.developer }}</p> 
+<p class="price">{{ info.price | currency }}</p>
+4.
+In index.html, replace the contents of the first .card div with the new <app-info> element:
+
+<div class="card"> 
+  <app-info info="move"></app-info> 
+</div>
+5.
+Do the same for the second and third .card divs. Replace their contents with <app-info info="shutterbugg"></app-info> and <app-info info="gameboard"></app-info>
+
+View the AngularJS app in the browser by typing http://localhost:8000.
+
+
+What did we just do? We wrote code to teach the browser a new HTML element <app-info>, and used it in the view to display each app's details.
+
+First in js/directives/appInfo.js, we made a new directive. We used app.directive to create a new directive named 'appInfo'. It returns an object with three options:
+
+restrict specifies how the directive will be used in the view. The 'E' means it will be used as a new HTML element.
+scope specifies that we will pass information into this directive through an attribute named info. The = tells the directive to look for an attribute named info in the <app-info> element, like this:
+ <app-info info="shutterbugg"></app-info>
+The data in info becomes available to use in the template given by templateURL.
+templateUrl specifies the HTML to use in order to display the data in scope.info. Here we use the HTML in js/directives/appInfo.html.
+Looking at js/directives/appInfo.html, we define the HTML to display details about an app, like its title and price. We use expressions and filters to display the data.
+
+Then in index.html we use the new directive as the HTML element <app-info>. We pass in objects from the controller's scope ($scope.shutterbugg) into the <app-info> element's info attribute so that it displays.
+
+
+
+Why is creating your own directives useful?
+
+Readability. Directives let you write expressive HTML. Looking at index.html you can understand the app's behavior just by reading the HTML.
+Reusability. Directives let you create self-contained units of functionality. We could easily plug in this directive into another AngularJS app and avoid writing a lot of repetitive HTML.
+
+
+
+We know that AngularJS comes with a few built-in directives like ng-repeat and ng-click.
+
+We've seen that AngularJS makes it possible to create your own custom directives, such as <app-info>.
+
+We can use Angular's built-in directives together with custom directives to create more readable apps.
+
+			example:
+			<div ng-repeat="product in products">
+  				<img ng-src="{{ product.cover }}">
+  				<p class="title">{{ product.name }}</p>
+			</div>
+Instructions
+1.
+In the controller, create a new property $scope.apps. Set it equal to an array of objects:
+
+[ 
+  { 
+    icon: 'img/move.jpg', 
+    title: 'MOVE', 
+    developer: 'MOVE, Inc.', 
+    price: 0.99 
+  }, 
+  { 
+    icon: 'img/shutterbugg.jpg', 
+    title: 'Shutterbugg', 
+    developer: 'Chico Dusty', 
+    price: 2.99 
+  } 
+]
+2.
+Add two more objects to the array describing your favorite apps. Make sure to define the four properties for each app.
+3.
+In the view, use ng-repeat to loop through $scope.apps and display each element. To do this, add ng-repeat to a <div class="card">, and then use the custom directive <app-info> to display each element.
+
+
+
+
+Directives are a core feature of AngularJS. So far we've used custom directives to simply display static content, but they can do more than this. It's possible to bake interactivity into directives.
+
+Let's start creating another directive that reacts to a user's click.
+Instructions
+1.
+In the new file js/directives/installApp.js, create a new directive named installApp. Refer to the appInfo directive for an example:
+
+use app.directive to create a new directive named installApp
+use the restrict option to create a new Element
+set the scope option to an empty object {}
+use the templateUrl option to tell this directive to use the js/directives/installApp.html file
+2.
+Include this new JavaScript file in index.html as a <script> element.
+3.
+In the installApp directive, add a fourth option named link, and type in the following function:
+
+function(scope, element, attrs) { 
+  scope.buttonText = "Install", 
+  scope.installed = false, 
+
+  scope.download = function() { 
+    element.toggleClass('btn-active'); 
+    if(scope.installed) { 
+      scope.buttonText = "Install"; 
+      scope.installed = false; 
+    } else { 
+      scope.buttonText = "Uninstall"; 
+      scope.installed = true; 
+    } 
+  } 
+}	
+
+
+
+
+
+We used app.directive to create a new directive named 'installApp'.
+
+The directive contains the three options restrict, scope, and templateUrl that we saw before in the 'appInfo' directive.
+It also contains a fourth option link. The link is used to create interactive directives that respond to user actions.
+The link function takes three inputs:
+
+scope refers to the directive's scope. Any new properties attached to $scope will become available to use in the directive's template.
+element refers to the directive's HTML element.
+attrs contains the element's attributes.
+Inside the link function, there are two properties buttonText and installed, and the function download(). We'll use these in the directive's template next.
+Instructions
+1.
+Next, write the directive's template:
+
+In the new file js/directives/installApp.html. Type in the following HTML:
+
+<button class="btn btn-active" ng-click="download()"> 
+  {{ buttonText }} 
+</button>
+
+
+The template uses Angular's built-in ng-click directive. When the button is clicked, ng-click will tell AngularJS to run the download() function in the directive.
+
+The download() function uses the scope.installed property to check if an app is installed. When an app is installed, download() does three things:
+
+toggles the .btn-active class
+changes the button text to "Uninstall"
+changes scope.installed to true
+
+
+Well done! An "Install" button now shows up under each app. When you click the button, it changes to an "Uninstall" button. When you click it again, it changes back to an "Install" button.
+
+What can we generalize so far?
+
+Directives are a powerful way to create self-contained, interactive components. Unlike jQuery which adds interactivity as a layer on top of HTML, AngularJS treats interactivity as a native component of HTML.

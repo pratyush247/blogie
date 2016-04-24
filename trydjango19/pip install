@@ -1,0 +1,591 @@
+pip install
+command:sudo apt get install pip
+pip install virtualenv for installing virtual env settings
+choose directory
+create folder myproject
+open folder
+create virtual env using command :virtualenv .
+activate virtualenv by typing source bin/activate
+create anotherfolder for installing django
+cd to newfolder let it be trydjango19
+pip install django
+install text editor sublime
+open and save project as give name to project
+add folder myproject to project created
+now on terminal
+run python manage.py migrate
+createsuperuser
+give credentials
+run python manage.py startapp name
+go to models in post
+add code 
+{
+# Create your models here.
+#MVC model view controller
+
+class Post(models.Model):
+	title=models.CharField(max_length=120)
+	content = models.TextField()
+	lastupdated=models.DateTimeField(auto_now=True,auto_now_add=False)
+	timestamp=models.DateTimeField(auto_now=False,auto_now_add=True)
+
+
+	def __unicode__(self):
+		return self.title
+
+	def __str__(self):
+		return self.title
+ }
+in models .py
+run python manage.py makemigration to add new app the  basic settings
+run python migrate to add this content to databse and generate tables for it
+in admin add this code
+{
+		list_display=["title","lastupdated","timestamp"]
+	list_display_links=["lastupdated"]
+	list_filter=["lastupdated","timestamp"]
+	search_fields=["title","content"]
+	list_editable=["title"]
+	class Meta:
+		model=Post
+admin.site.register(Post,PostModelAdmin)
+}
+more features on model admin available on documentation on django
+crudd:{how app perform}
+	create
+	retrieve
+	update
+	delete
+	in http methods in form crudd used ie create is post and retrive is get and update is put{more on wiki}
+mvc understand
+
+{some concepts of django
+	queryset
+	function based views[easy and master to understand class based view]
+	class based view on digital market}
+views:
+code added
+{from django.http import HttpResponse
+
+
+# Create your views here.
+def posts_home(request):
+	return HttpResponse(<h1>Hello</h1>)}
+
+request and response
+{the above code since we act as server so we return response to request so ones request come we return the response and view handles it its a part of mvc to understand read mvc }
+
+Mapping urls to views
+	from django.conf.urls import url
+from django.contrib import admin
+#from posts import views
+#from post2 import views
+#since two same views so #from posts import views as post2_view required so better to use method 2 as down
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    #method 1 importing views
+  	#  url(r'^posts/$', "views.post_home"),
+  	#method 2 without importing views
+    url(r'^posts/$', "posts.views.post_home"),
+    #url(r'^posts/$', "<appname>.view.<function_name"),
+
+]
+common regular expression on github of cfe guides
+
+IN APP URLS
+
+
+
+
+
+three ways to import 
+	import appname.filename
+	from . import filename
+	from appname import filename
+	or to keep old style
+	from .views import(function name1,function name2,function name3,)
+
+
+to call urls:
+	The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/1.9/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.conf.urls import url, include
+    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
+"""
+
+
+
+django template declaration in views .py
+using context and rendering template
+	
+def post_detail(request):#retrieve
+	#return HttpResponse("<h1>detail</h1>")
+	
+	context={"title"="listdetail"}
+	#return HttpResponse("<h1>list</h1>")
+	return render(request,"index.html",context)
+
+
+
+
+
+
+
+query set 
+open python shell by closing server
+so this can be used to run commands of query set in shell as in screenshot taken
+
+2 way command can be added in views for eg we can add queryset=Post.objects.all()
+
+
+tutorial 404 very imp repeat
+and check screenshots
+
+
+
+
+
+
+first we made a model then we create form to add model then we passed it to html file and then view was used to control its view
+
+
+
+
+cms of django
+mezzanine,wagtail and django-cms
+
+
+
+
+context is a dictionary which is first given key values and then passed through the render since it contains definition that is used in templates for more dynamic control
+
+python manage.py shell for django python shell
+for shell
+post.objects.all()
+post.objects.filter(title="")
+post.objects.create(title="",content="")
+queryset=post.objects.all()
+	for obj in queryset:
+	print obj.title
+	print obj.content
+	print obj.timestamp
+	print obj.id
+	etc etc
+
+
+
+>>> Post.objects.create(title="great",content="i am great")
+<Post: great>
+>>> Post.objects.create(title="great",content="i am great")
+<Post: great>
+>>> 
+>>> 
+>>> 
+>>> Post.objects.create(title="great",content="i am great")
+<Post: great>
+>>> Post.objects.create(title="great3",content="i am great")
+<Post: great3>
+>>> Post.objects.create(title="great33",content="i am great")
+<Post: great33>
+>>> Post.objects.create(title="great4",content="i am great")
+<Post: great4>
+>>> Post.objects.create(title="great44",content="i am great")
+<Post: great44>
+>>> queryset=Post.objects.all()
+>>> for obj in queryset:
+...    print obj.title
+
+
+
+post.objects.get(id="")
+
+everything above is querying command
+
+
+
+
+get_object_or_404 gives 404 error page if something not found
+
+def post_detail(request,id=None):#retrieve
+	instance=get_object_or_404(Post,id=id)
+	
+(((((so context is a dictionary and instance is taking details of object rquested through id from post)))))
+	
+#return HttpResponse("<h1>detail</h1>")
+	
+	context={
+				"title":instance.title,#-->instance.title is title of the current searched object which is assigned to title 								that is passed to html template
+				"instance":instance, #---->whole object is passed through instance so that it could be searched and iterated 								in the template
+
+				}
+	#return HttpResponse("<h1>list</h1>")
+	return render(request,"post_detail.html",context)
+
+
+
+<a href="/post/{{obj.id}}/">{{ obj.title }}</a></br> 
+	one way to create link each post from post list to its detail
+
+another better method is
+first in url.py add name to  url(r'^(?P<id>\d+)/$',post_detail),
+thus it becomes
+ url(r'^(?P<id>\d+)/$',post_detail,name="detail"),
+ then in index.html write
+ <a href="/post/{{obj.id}}/">{{ obj.title }}</a></br>
+ as
+ <a href="{% url "detail" id=obj.id %}">{{ obj.title }}</a></br>
+ this helps overcome anychange in url.py thus more dynamic
+
+
+ MUCH MORE DYNAMIC METHOD
+add namespace='posts' in urls ie url(r'^posts/', include('posts.urls',namespace='posts')), in url of main django19
+then add this to models
+
+  from django.core.urlresolvers import reverse
+ def get_absolute_url(self):
+	return reverse("posts:detail",kwargs={"id":sef.id})
+	return "/post/%s/"(self.id)
+	
+and then write the code as in index.html
+	{% url "posts:detail" id=obj.id %}
+	<a href="{{obj.get_absolute_url }}">
+namespace to keep the detail with multiple app using same url name
+
+
+
+
+the above topic is having issue
+
+
+
+
+for creating a form 
+first add form.py to posts folder and then create a model of form 
+by adding this code
+from django import forms
+from .models import Post
+
+class PostForm(forms.ModelForm):
+	class Meta:
+		model=Post
+		fields=[
+				"title",
+				"content",
+			]
+
+after this import this model to view section and pass the model to a variable which is then imported in the html view through context
+ie
+from .forms import PostForm
+	# Create your views here.
+	def post_create(request,id=None):
+	form=PostForm()
+	context={
+	"form":form,}
+	return render(request,"post_form.html",context)
+
+now create post_form.html
+by adding code
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+	<form method="POST">{% csrf_token %}
+	{{form.as_p }}
+	<input type=submit value="create" name="create"/>
+	</form></body>
+	 
+updating is simple add the same code of post create only a keyword is passed in postform
+instance=instance 
+def post_update(request,id):#update
+	instance=get_object_or_404(Post,id=id)
+	#return HttpResponse("<h1>detail</h1>")
+	form=PostForm(request.POST or None,instance=instance)
+	if form.is_valid():
+			instance=form.save(commit=False)
+			instance.save()
+			#success message
+			return HttpResponseRedirect(instance.get_absolute_url())
+	context={
+				"form":form,
+				}
+	#return HttpResponse("<h1>list</h1>")
+	return render(request,"post_form.html",context)
+
+work:add update button to form so whenever clicked opens updater window and then update once again clicked redirects to new updated form
+and a javascript plugint to confirm update
+
+to del
+add redirect to shortcuts and in urls.py of pst name="list" to post list
+then add this code in view
+def post_delete(request,id=None):
+	instance=get_object_or_404(Post,id=id)
+	instance.delete()
+	return redirect("Posts:list")
+
+template inheritance the base class has definition of all other html pages but never directly rendered those pages are rendered whose definition are in the base as seen in views
+
+also  title change using block head can be seen and include used for including messages.
+for this code see the html pages since changes too much so code not added here
+and 
+
+note: block.super is imp to understand.
+{solved block.super brings data from the base.html present in its block content since it is parent of other child html pages}
+
+
+
+for users email authentication 
+out from this tutorial
+class UserForm( forms.ModelForm ):
+    class Meta:
+        model= User
+        exclude= ('email',)
+    username = forms.EmailField(max_length=64,
+        help_text = "The person's email address.")
+    def clean_email( self ):
+        email= self.cleaned_data['username']
+        return email
+
+class UserAdmin( admin.ModelAdmin ):
+    form= UserForm
+    list_display = ( 'email', 'first_name', 'last_name', 'is_staff' )
+    list_filter = ( 'is_staff', )
+    search_fields = ( 'email', )
+
+admin.site.unregister( User )
+admin.site.register( User, UserAdmin )
+
+
+191
+down vote
+accepted
+Try putting this into your urls.py
+
+from django.conf import settings
+
+# ... your normal urlpatterns here
+
+if settings.DEBUG:
+    # static files (images, css, javascript, etc.)
+    urlpatterns += patterns('',
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.MEDIA_ROOT}))
+With this you can serve the static media from Django when DEBUG = True (when you run on local computer) but you can let your web server configuration serve static media when you go to production and DEBUG = False
+
+
+
+learn using cycle function in templates
+
+
+
+for ordering the post according to latest
+		class Meta:
+			ordering=["-timestamp","-updated"]
+			#either this or as in views use orderby with query
+
+
+
+to add image first add filefield to models.py in class Posts
+image=models.FileField(null=True,blank=True)
+then assign media_url and media root in settings and also make media cdn folder in the virtual env
+after that add 
+ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+ to urls.py
+ then add enctype to post_form.html
+ and then add request.FILES or None to views.py to both methods post_create and post_update
+
+def post_create(request,id=None):
+	form=PostForm(request.POST or None,request.FILES or None)
+
+def post_update(request,id):#update
+	instance=get_object_or_404(Post,id=id)
+	form=PostForm(request.POST or None,request.FILES or None,instance=instance)
+
+to display image
+in post_detail.html
+{%if instance.image %}
+<img src="{{instance.image.url}}" class="img-responsive"/> to post_detail.html
+{%endif %}
+in post_list.html
+{%if obj.image %}
+<img src="{{obj.image.url}}" class="img-responsive"/> to post_detail.html
+{%endif %}
+
+
+
+check out pillow work missed due to less data ie use of imagefield
+
+to define the location where the file uploaded here instance.id named folder created in media_cdn and then the post is saved
+i.e it helps to store media by post
+def upload_location(instance,filename):
+	return "%s/%s" %(instance.id,filename)
+image=models.FileField(upload_to=upload_location,null=True,blank=True)
+one thing is more check the video but not recomended
+
+
+
+to apply slug
+from django.db.models.signals import pre_save
+from django.utils.text import slugify	
+add this to models then 
+function
+def  reciver(sender,instance,*args,**kwargs):
+		slug=slugify(instance.title)
+		exist=Post.objects.filter(slug=slug).exists()
+		if exist:
+			slug="%s-%s" %(slug,instance.id)
+		instance.slug=slug
+
+
+pre_save.connect(reciver,sender=Post)
+
+and to class [post]
+	slug=models.SlugField(unique=True)
+
+
+def create_slug(instance,new_slug=None):
+	sluh=slugify(instance.title)
+	if new_slug is not None:
+		slug=new_slug
+	qs=Post.objects.filter(slug=slug).order_by("-id")
+	exists=qs.exist()
+	if exists:
+			new_slug="%s-%s" %(slug,qs.first().id)
+			return create_Slug(instance,new_slug=new_slug)
+	return slug
+
+	add this recursive program to manage slug
+
+
+
+
+note:tried django-autoslug but dint work try again
+
+
+
+<img src="{{instance.image.url}}" to use image src where image is a keyword in model post and instance is the the keyword which stores the whole definition of Post object and url is used to fetch its ur;l 
+
+
+to get absolute url
+use {{request.build_absolute_url}}
+
+to share string add library
+urllib.quote_plus
+the share_string=quote_plus(instance.content)
+context={
+	"share_string":share_string,
+}
+and in template
+use{{instance.share_string}}
+
+
+
+
+creating custom tag filter like built in filter timestamp or timescine
+create folder templatetags in app add file init-py and then add the tag filter file xyz.py
+and write the code
+from urllib import quote_plus
+from django import template
+
+register=template.Library()
+
+@register.filter
+def urlify(value):
+	return quote_plus(value)
+and use 
+{%load urlify ie tag name%} and then use it with the obj like{{instance.content|urlify}} i.e. now it renders the request and pass the content to the urlify.py and where it converts it in quote_plus and then returns the value
+
+note:try doing with reciver and signals
+note 2:how to apply different background image to different pages when using block content since only one body tag present?
+
+
+
+
+install pip install whoosh haystack for advanced search
+whoosh_index=os.path.join(BASE_DIR, "whoosh")
+
+import os
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': whoosh_index,
+    },
+}
+add code to setting create folder like we did in static_cdn
+and add app haystack and whoosh to app installed in settings
+ content_auto=indexes.EdgeNgramField(model_attr='title')
+here edgengram used to take suggestion or previous search
+
+for views from heystack. import SearchQuerySet
+def search_titles(request):
+posts=SearchQuerySet.autocomplete(content_autorequest.POST.get('search_text',''))
+return render_to_response('.html':posts)
+u can try this but mine is not fully functional
+
+
+to get date widget 
+publish=forms.DateField(widget=forms.widgets.SelectDateWidget)
+
+
+to add marked down cheatsheet
+
+add two scripts to base.html
+	<script   src="http://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+	
+then add a jquery code 	
+
+		<script type="text/javascript">
+		$(document).ready(function(){
+			    $(".content-markdown").each(function(){
+			            var content = $(this).text()
+								  var markedContent = marked(content)
+			            $(this).html(markedContent)
+			    })
+					$(".content-markdown img").each(function(){
+									$(this).addClass("img-responsive")
+					})
+				})
+		</script>
+where content -markdown is class added to instance.content in detail and list html
+also remove linebreaks and trunchatechar as they create problem in its functioning
+
+
+
+now to work on forms better one can install django-pagedown go to github everything explained in documentation
+
+
+
+note:my pagedown not rendering 
+
+
+
+now to till now we using jquery and marked to use markdown but now we let django to that work and control markdown cheatsheet and django-markdown widget byt using django-markeddown-deux
+		
+	django-markeddown is working first def a function in models 
+		def get_markdown(self):
+			return markdown_safe(markdown(self.content))
+
+	and add this imports to model
+
+from django.utils.safestring import mark_safe
+from markdown_deux import markdown
+
+
+
+after this replace jquery class with new post detail class that only overcomes the responsiveness of im age however rendering t=done by deux library instead of content_markdown jquery function
+
+also replace instance.content with instance.get_markdown the function defined in model
+
+template tag trunchate chars and list and other things in django docum play around with these things
+
+to get hand made preview we need to add a lot og code as in tutorial 8
